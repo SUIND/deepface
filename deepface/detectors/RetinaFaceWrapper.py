@@ -38,13 +38,13 @@ def detect_face(face_detector, img, align=True):
                 left_eye = landmarks["left_eye"]
                 right_eye = landmarks["right_eye"]
                 nose = landmarks["nose"]
-                # mouth_right = landmarks["mouth_right"]
-                # mouth_left = landmarks["mouth_left"]
+                mouth_right = landmarks["mouth_right"]
+                mouth_left = landmarks["mouth_left"]
 
                 detected_face = postprocess.alignment_procedure(
                     detected_face, right_eye, left_eye, nose
                 )
 
-            resp.append((detected_face, img_region, confidence))
+            resp.append((detected_face, img_region, confidence, landmarks))
 
     return resp

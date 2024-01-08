@@ -59,6 +59,6 @@ def detect_face(face_detector, img, align=False):
                 detected_face = FaceDetector.alignment_procedure(
                     detected_face, left_eye[0].cpu(), right_eye[0].cpu()
                 )
-        resp.append((detected_face, [x, y, w, h], confidence))
+        resp.append((detected_face, [x, y, w, h], confidence, result.keypoints.xy.tolist()[0]))
 
     return resp

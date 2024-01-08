@@ -33,6 +33,6 @@ def detect_face(face_detector, img, align=True):
                 right_eye = keypoints["right_eye"]
                 detected_face = FaceDetector.alignment_procedure(detected_face, left_eye, right_eye)
 
-            resp.append((detected_face, img_region, confidence))
+            resp.append((detected_face, img_region, confidence, keypoints))
 
     return resp

@@ -167,8 +167,11 @@ def extract_faces(
 
     if len(face_objs) == 0 and enforce_detection is False:
         face_objs = [(img, img_region, 0)]
+    
+    # if detector_backend != "retinaface" or detector_backend != "mtcnn":
+    #     raise ValueError(f"unimplemented detector backend - {detector_backend}")
 
-    for current_img, current_region, confidence in face_objs:
+    for current_img, current_region, confidence, landmarks in face_objs:
         if current_img.shape[0] > 0 and current_img.shape[1] > 0:
             if grayscale is True:
                 current_img = cv2.cvtColor(current_img, cv2.COLOR_BGR2GRAY)
@@ -226,7 +229,7 @@ def extract_faces(
                 "h": int(current_region[3]),
             }
 
-            extracted_face = [img_pixels, region_obj, confidence]
+            extracted_face = [img_pixels, region_obj, confidence, landmarks]
             extracted_faces.append(extracted_face)
 
     if len(extracted_faces) == 0 and enforce_detection == True:
