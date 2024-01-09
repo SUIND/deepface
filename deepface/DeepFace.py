@@ -673,7 +673,27 @@ def represent(
         )
     elif detector_backend == "custom":
         if isinstance(img_path, list):
-            img_objs = img_path
+            # custom normalization
+            img = img_path[0]
+            img = functions.normalize_input(img=img, normalization=normalization)
+
+            # represent
+            if "keras" in str(type(model)):
+                # model.predict causes memory issue when it is called in a for loop
+                # embedding = model.predict(img, verbose=0)[0].tolist()
+                embedding = model(img, training=False).numpy()[0].tolist()
+            else:
+                # SFace and Dlib are not keras models and no verbose arguments
+                embedding = model.predict(img)[0].tolist()
+
+            resp_obj = {}
+            resp_obj["embedding"] = embedding
+            resp_obj["facial_area"] = img_path[1]
+            resp_obj["face_confidence"] = img_path[2]
+            resp_obj["landmarks"] = img_path[3]
+            resp_objs.append(resp_obj)
+            
+            return resp_objs
         else:
             raise ValueError(
                 "You should pass the output of extract_faces directly if you set detector_backend to custom."
