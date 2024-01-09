@@ -662,7 +662,7 @@ def represent(
     # ---------------------------------
     # we have run pre-process in verification. so, this can be skipped if it is coming from verify.
     target_size = functions.find_target_size(model_name=model_name)
-    if detector_backend != "skip":
+    if detector_backend != "skip" and detector_backend != "custom":
         img_objs = functions.extract_faces(
             img=img_path,
             target_size=target_size,
@@ -671,6 +671,13 @@ def represent(
             enforce_detection=enforce_detection,
             align=align,
         )
+    elif detector_backend == "custom":
+        if isinstance(img_path, list):
+            img_objs = img_path
+        else:
+            raise ValueError(
+                "You should pass the output of extract_faces directly if you set detector_backend to custom."
+            )
     else:  # skip
         if isinstance(img_path, str):
             img = functions.load_image(img_path)
@@ -686,7 +693,7 @@ def represent(
             img = np.expand_dims(img, axis=0)
         # --------------------------------
         img_region = [0, 0, img.shape[1], img.shape[0]]
-        img_objs = [(img, img_region, 0)]
+        img_objs = [(img, img_region, 0, None)]
     # ---------------------------------
 
     for img, region, confidence, landmarks in img_objs:
