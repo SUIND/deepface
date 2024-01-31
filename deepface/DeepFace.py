@@ -674,7 +674,11 @@ def represent(
     elif detector_backend == "custom":
         if isinstance(img_path, list):
             # custom normalization
-            img = img_path[0]
+            if len(img_path.shape) == 4:
+                img = img_path[0]  # e.g. (1, 224, 224, 3) to (224, 224, 3)
+            if len(img_path.shape) == 3:
+                img = cv2.resize(img_path, target_size)
+                img = np.expand_dims(img, axis=0)
             img = functions.normalize_input(img=img, normalization=normalization)
 
             # represent
