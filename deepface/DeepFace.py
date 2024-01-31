@@ -675,8 +675,7 @@ def represent(
         if isinstance(img_path, list):
             # custom normalization
             img = img_path[0]
-            print(f"Image input shape: {img.shape}")
-            print(f"Image input: {img}")
+            img = np.expand_dims(img, axis=0)
             img = functions.normalize_input(img=img, normalization=normalization)
 
             # represent
